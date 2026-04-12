@@ -53,27 +53,31 @@ const startExpressServer = async () => {
   // Start the server before applying middleware
   await apolloServer.start();
 
-  //Apply middleware to the Express app
-  app.use(
-    '/graphql',
-    cors(),
-    express.json(),
-    expressMiddleware(apolloServer)
-  );
+// After
+app.use(
+  '/graphql',
+  cors({
+    origin: ['http://localhost:4200', 'https://comp-3133-101524575-assignment1.vercel.app', /\.vercel\.app$/],
+    credentials: true
+  }),
+  express.json(),
+  expressMiddleware(apolloServer)
+);
 
-  app.listen(PORT, async () => {
-    console.log(
-      "---------------------------------------------------------------",
-    );
-    console.log(`Access GraphQL at http://localhost:${PORT}/graphql`);
-    //Connect to MongoDB Atlas
+  // Only call listen() when running locally, not on Vercel
+  if (process.env.VERCEL !== '1') {
+    app.listen(PORT, async () => {
+      console.log("---------------------------------------------------------------");
+      console.log(`Access GraphQL at http://localhost:${PORT}/graphql`);
+      await connectDB();
+      console.log(`Press Ctrl+c to stop`);
+      console.log("---------------------------------------------------------------");
+    });
+  } else {
     await connectDB();
-
-    console.log(`Press Ctrl+c to stop`);
-    console.log(
-      "---------------------------------------------------------------",
-    );
-  });
+  }
 };
 
 startExpressServer();
+
+export default app;
