@@ -54,6 +54,10 @@ const startExpressServer = async () => {
   await apolloServer.start();
 
 // After
+app.get('/', (_req, res) => {
+  res.json({ status: 'ok', graphql: '/graphql' });
+});
+
 app.use(
   '/graphql',
   cors({
