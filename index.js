@@ -13,10 +13,6 @@ import { userResolvers } from './resolvers/UserResolver.js';
 import employeeSchema from './schemas/EmployeeSchema.js';
 import employeeResolvers from './resolvers/EmployeeResolver.js';
 
-// this is because I use pi-hole and I have issues with DNS if I don't specify it
-import dns from 'node:dns'; // or 'dns'
-dns.setServers(['8.8.8.8', '8.8.4.4']);
-
 // Configure Mongoose to use new options globally
 mongoose.set('returnDocument', 'after');
 
@@ -82,6 +78,6 @@ app.use(
   }
 };
 
-startExpressServer();
+await startExpressServer();
 
 export default app;
